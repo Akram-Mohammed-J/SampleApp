@@ -6,6 +6,8 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeStack from './HomeStack';
 import PolicyStack from './PolicyStack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import EnTypoIcons from 'react-native-vector-icons/Entypo';
+import AddPostScreen from '../screens/AddPostScreen';
 const TabNavigation = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -20,11 +22,23 @@ const TabNavigation = () => {
             iconName = focused ? 'account' : 'account-outline';
           } else if (route.name === 'Policy') {
             iconName = focused ? 'information' : 'information-outline';
+          } else if (route.name === 'Post') {
+            iconName = focused ? 'squared-plus' : 'squared-plus';
           }
 
           // You can return any component that you like here!
           return (
-            <MaterialCommunityIcons name={iconName} size={size} color={color} />
+            <>
+              {route.name !== 'Post' ? (
+                <MaterialCommunityIcons
+                  name={iconName}
+                  size={size}
+                  color={color}
+                />
+              ) : (
+                <EnTypoIcons name={iconName} size={size} color={color} />
+              )}
+            </>
           );
         },
         tabBarActiveTintColor: '#8437a4',
@@ -40,6 +54,11 @@ const TabNavigation = () => {
         name="profile"
         options={{headerShown: false}}
         component={UsersScreen}
+      />
+      <Tab.Screen
+        name="Post"
+        options={{headerShown: false}}
+        component={AddPostScreen}
       />
       <Tab.Screen
         name="Policy"
