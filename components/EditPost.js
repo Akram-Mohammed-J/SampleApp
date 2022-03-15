@@ -6,6 +6,7 @@ import {
   TouchableHighlight,
   Image,
   Pressable,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useValidation} from 'react-native-form-validator';
@@ -133,7 +134,15 @@ const EditPost = ({data}) => {
             style={ss.highLight}
             onPress={() => handleSumbit()}>
             <View style={btnLoader ? ss.highLightDisabled : ss.btn}>
-              <Text style={ss.btnLabel}>Edit Post</Text>
+              <Text
+                style={[
+                  ss.btnLabel,
+                  {
+                    lineHeight: Platform.OS == 'ios' ? 40 : 20,
+                  },
+                ]}>
+                Edit Post
+              </Text>
             </View>
           </TouchableHighlight>
 
@@ -142,7 +151,16 @@ const EditPost = ({data}) => {
               navigation.goBack();
             }}>
             <View style={ss.btnCancel}>
-              <Text style={ss.btnLabelCancel}> cancel</Text>
+              <Text
+                style={[
+                  ss.btnLabelCancel,
+                  {
+                    lineHeight: Platform.OS == 'ios' ? 40 : 20,
+                  },
+                ]}>
+                {' '}
+                cancel
+              </Text>
             </View>
           </Pressable>
         </View>
