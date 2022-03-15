@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Image, StyleSheet, Text} from 'react-native';
+import {View, Image, StyleSheet, Text, Platform} from 'react-native';
 const User = props => {
   const {user} = props;
   return (
@@ -10,7 +10,15 @@ const User = props => {
           uri: `https://source.unsplash.com/random/?men`,
         }}
       />
-      <Text style={ss.userDetails}>Email : {user.email}</Text>
+      <Text
+        style={[
+          ss.userDetails,
+          {
+            lineHeight: Platform.OS == 'ios' ? 100 : 20,
+          },
+        ]}>
+        Email : {user.email}
+      </Text>
     </View>
   );
 };

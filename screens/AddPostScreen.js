@@ -4,6 +4,7 @@ import {
   View,
   FlatList,
   TouchableHighlight,
+  SafeAreaView,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import PhotoGrid from '../components/PhotoGrid';
@@ -162,7 +163,7 @@ const AddPostScreen = () => {
     );
   };
   return (
-    <View style={ss.photoContainer}>
+    <SafeAreaView style={ss.photoContainer}>
       <FlatList
         numColumns={2}
         contentContainerStyle={ss.photoContainer}
@@ -180,7 +181,13 @@ const AddPostScreen = () => {
           }}>
           <View style={ss.btn}>
             <IonIcons name="camera-outline" style={ss.cameraIcon} size={25} />
-            <Text style={ss.btnLabel}>Add a photo</Text>
+            <Text
+              style={[
+                ss.btnLabel,
+                {lineHeight: Platform.OS === 'ios' ? 30 : 20},
+              ]}>
+              Add a photo
+            </Text>
           </View>
         </TouchableHighlight>
       </View>
@@ -223,7 +230,7 @@ const AddPostScreen = () => {
           )}
         </Actionsheet.Content>
       </Actionsheet>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -237,6 +244,7 @@ const ss = StyleSheet.create({
     borderRadius: 10,
   },
   btn: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

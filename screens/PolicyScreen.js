@@ -1,4 +1,4 @@
-import {StyleSheet, Button, Linking, View} from 'react-native';
+import {StyleSheet, Button, Linking, View, SafeAreaView} from 'react-native';
 import React from 'react';
 import WebView from 'react-native-webview';
 import {Spinner} from 'native-base';
@@ -11,7 +11,7 @@ const PolicyScreen = () => {
   };
 
   return (
-    <View style={ss.container}>
+    <SafeAreaView style={ss.container}>
       <WebView
         source={{uri: 'https://reactnative.dev/'}}
         startInLoadingState={true}
@@ -23,7 +23,7 @@ const PolicyScreen = () => {
       />
 
       <Button title="Open in Browser" onPress={handleOpen}></Button>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -32,7 +32,6 @@ export default PolicyScreen;
 const ss = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ddd3ed',
   },
   content: {
     justifyContent: 'center',

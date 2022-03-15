@@ -83,7 +83,15 @@ export default function Login() {
         ))}
       <TouchableHighlight style={ss.highLight} onPress={handleSumbit}>
         <View style={ss.btn}>
-          <Text style={ss.btnLabel}>Login</Text>
+          <Text
+            style={[
+              ss.btnLabel,
+              {
+                lineHeight: Platform.OS == 'ios' ? 40 : 20,
+              },
+            ]}>
+            Login
+          </Text>
         </View>
       </TouchableHighlight>
       <View style={ss.linkBox}>

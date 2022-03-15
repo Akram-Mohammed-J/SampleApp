@@ -1,4 +1,4 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useState, useEffect} from 'react';
 import {CheckIcon, Select} from 'native-base';
 import {useValidation} from 'react-native-form-validator';
@@ -10,6 +10,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   Pressable,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
@@ -96,17 +97,14 @@ export default function SignUp() {
     setIsPickerShow(true);
   };
 
-  const onChange = (event, value) => {
-    if (!value) return;
+  const onChange = date => {
+    if (!date) return;
     setUser({
       ...user,
-      dateOfBirth: value,
+      dateOfBirth: date,
     });
     setSelected(true);
-
-    if (Platform.OS === 'android') {
-      setIsPickerShow(false);
-    }
+    setIsPickerShow(false);
   };
 
   return (
@@ -151,9 +149,23 @@ export default function SignUp() {
       <Pressable onPress={showPicker}>
         <View style={ss.dateBox}>
           {!selected ? (
-            <Text style={ss.infoText}>Enter your Date of Birth </Text>
+            <Text
+              style={[
+                ss.infoText,
+                {
+                  lineHeight: Platform.OS == 'ios' ? 50 : 20,
+                },
+              ]}>
+              Enter your Date of Birth{' '}
+            </Text>
           ) : (
-            <Text style={ss.infoText}>
+            <Text
+              style={[
+                ss.infoText,
+                {
+                  lineHeight: Platform.OS == 'ios' ? 50 : 20,
+                },
+              ]}>
               {user.dateOfBirth.toLocaleDateString('en-GB', DateOptions)}{' '}
             </Text>
           )}
@@ -206,7 +218,15 @@ export default function SignUp() {
         ))}
       <TouchableHighlight style={ss.highLight} onPress={handleSumbit}>
         <View style={ss.btn}>
-          <Text style={ss.btnLabel}>Sign Up</Text>
+          <Text
+            style={[
+              ss.btnLabel,
+              {
+                lineHeight: Platform.OS == 'ios' ? 40 : 20,
+              },
+            ]}>
+            Sign Up
+          </Text>
         </View>
       </TouchableHighlight>
 
@@ -218,12 +238,17 @@ export default function SignUp() {
       </View>
 
       {isPickerShow && (
-        <DateTimePicker
+        <DateTimePickerModal
+          onCancel={() => {
+            setIsPickerShow(false);
+          }}
+          isVisible={isPickerShow}
           value={user.dateOfBirth}
           mode={'date'}
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
           is24Hour={true}
-          onChange={onChange}
+          onConfirm={onChange}
+          // onChange={onChange}
         />
       )}
     </View>
