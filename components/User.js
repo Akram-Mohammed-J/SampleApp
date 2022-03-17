@@ -29,7 +29,7 @@ const User = props => {
       }
       await auth().signOut();
       await AsyncStorage.clear();
-      navigation.navigate('login');
+      navigation.goBack();
     } catch (error) {
       console.log(error);
     }
@@ -46,7 +46,7 @@ const User = props => {
         style={[
           ss.userDetails,
           {
-            lineHeight: Platform.OS == 'ios' ? 100 : 20,
+            lineHeight: Platform.OS == 'ios' ? 57 : 20,
           },
         ]}>
         Email : {user.email}
@@ -82,7 +82,6 @@ const ss = StyleSheet.create({
     borderRadius: 8,
     elevation: 10,
     width: 300,
-    maxHeight: 500,
   },
   profileImage: {
     borderWidth: 3,
@@ -96,7 +95,7 @@ const ss = StyleSheet.create({
   },
   userDetails: {
     fontSize: 17,
-    marginVertical: 40,
+    marginVertical: Platform.OS === 'android' ? 40 : 5,
     textAlign: 'center',
     textAlignVertical: 'center',
     fontWeight: 'bold',
