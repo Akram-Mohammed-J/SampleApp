@@ -11,7 +11,6 @@ function UsersScreen() {
       try {
         let users = await AsyncStorage.getItem('user');
         users = JSON.parse(users);
-        console.log(users);
         setUser(users);
         setLoading(false);
       } catch (error) {
