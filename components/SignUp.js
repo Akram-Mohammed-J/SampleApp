@@ -2,6 +2,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useState, useEffect} from 'react';
 import {CheckIcon, Select} from 'native-base';
 import {useValidation} from 'react-native-form-validator';
+import {useToast, Spinner} from 'native-base';
 
 import {
   View,
@@ -14,8 +15,11 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
+import auth from '@react-native-firebase/auth';
+import CustomToast from './CustomToast';
 
 export default function SignUp() {
+  const toast = useToast();
   var DateOptions = {
     year: 'numeric',
     month: 'numeric',
@@ -31,9 +35,10 @@ export default function SignUp() {
     password: '',
     confirmPassword: '',
   });
-  const [users, setUsers] = useState([]);
+  const [Loader, setLoader] = useState(false);
   const [isPickerShow, setIsPickerShow] = useState(false);
   const [selected, setSelected] = useState(false);
+  const [ageErr, setAgeErr] = useState(false);
   const {name, email, phone, password, confirmPassword} = user;
   const {validate, isFieldInError, getErrorsInField, isFormValid} =
     useValidation({
@@ -58,7 +63,25 @@ export default function SignUp() {
     setSelected(false);
   }, []);
 
+  const renderError = err => {
+    toast.show({
+      placement: 'bottom',
+      duration: 5000,
+      render: () => {
+        return (
+          <CustomToast
+            toast={{
+              type: 'error',
+              message: `${err}`,
+            }}
+          />
+        );
+      },
+    });
+  };
+
   const handleSumbit = async () => {
+    setLoader(true);
     validate({
       name: {maxlength: 7, required: true},
       email: {email: true, required: true},
@@ -76,20 +99,50 @@ export default function SignUp() {
         required: true,
       },
     });
-    if (isFormValid()) {
+    if (isFormValid() && !ageErr) {
       let formData = {
-        name: user.name,
+        // name: user.name,
         email: user.email,
-        phone: user.phone,
-        date_of_birth: selected
-          ? user.dateOfBirth.toLocaleDateString('en-GB', DateOptions)
-          : '',
-        age: user.age,
+        // phone: user.phone,
+        // date_of_birth: selected
+        //   ? user.dateOfBirth.toLocaleDateString('en-GB', DateOptions)
+        //   : '',
+        // age: user.age,
       };
-      try {
-        await AsyncStorage.setItem('user', JSON.stringify(formData));
-        navigation.navigate('Welcome');
-      } catch (error) {}
+      // try {
+      //   await AsyncStorage.setItem('user', JSON.stringify(formData));
+      //   navigation.navigate('Welcome');
+      // } catch (error) {}
+
+      auth()
+        .createUserWithEmailAndPassword(user.email, user.password)
+        .then(res => {
+          console.log('User account created & signed in!', {resObj: res});
+          AsyncStorage.setItem('user', JSON.stringify(formData))
+            .then(res => navigation.navigate('Welcome'))
+            .catch(() => renderError('Something Went wrong'));
+        })
+        .catch(error => {
+          if (error.code == 'auth/email-already-in-use') {
+            renderError('Email Already Exist');
+          } else if (error.code == 'auth/invalid-email') {
+            renderError('Invalid Email');
+          } else {
+            renderError('Something Went wrong');
+          }
+        })
+        .finally(() => setLoader(false));
+    } else {
+      setLoader(false);
+    }
+  };
+
+  const calculateAge = date => {
+    const years = new Date().getFullYear() - date.getFullYear();
+    if (years < 18) {
+      setAgeErr(true);
+    } else {
+      setAgeErr(false);
     }
   };
 
@@ -103,6 +156,8 @@ export default function SignUp() {
       ...user,
       dateOfBirth: date,
     });
+
+    calculateAge(date);
     setSelected(true);
     setIsPickerShow(false);
   };
@@ -171,6 +226,11 @@ export default function SignUp() {
           )}
         </View>
       </Pressable>
+      {ageErr && (
+        <Text style={ss.error}>
+          you are not eligible to create an account 18+
+        </Text>
+      )}
 
       <Select
         selectedValue={user.age}
@@ -216,17 +276,33 @@ export default function SignUp() {
             {errorMessage}
           </Text>
         ))}
-      <TouchableHighlight style={ss.highLight} onPress={handleSumbit}>
+      <TouchableHighlight
+        disabled={Loader}
+        style={ss.highLight}
+        onPress={handleSumbit}>
         <View style={ss.btn}>
-          <Text
-            style={[
-              ss.btnLabel,
-              {
-                lineHeight: Platform.OS == 'ios' ? 40 : 20,
-              },
-            ]}>
-            Sign Up
-          </Text>
+          {Loader ? (
+            <Spinner
+              style={[
+                ss.btnLoader,
+                {
+                  lineHeight: Platform.OS == 'ios' ? 40 : 20,
+                },
+              ]}
+              size={25}
+              color="#8437a4"
+            />
+          ) : (
+            <Text
+              style={[
+                ss.btnLabel,
+                {
+                  lineHeight: Platform.OS == 'ios' ? 40 : 20,
+                },
+              ]}>
+              Sign Up
+            </Text>
+          )}
         </View>
       </TouchableHighlight>
 
@@ -289,6 +365,11 @@ const ss = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
     fontWeight: 'bold',
+    height: '100%',
+  },
+  btnLoader: {
+    textAlignVertical: 'center',
+    textAlign: 'center',
     height: '100%',
   },
   dateBox: {

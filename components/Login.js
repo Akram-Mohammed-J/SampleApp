@@ -65,7 +65,25 @@ export default function Login() {
     } catch (error) {}
   };
 
+  const renderError = err => {
+    toast.show({
+      placement: 'bottom',
+      duration: 5000,
+      render: () => {
+        return (
+          <CustomToast
+            toast={{
+              type: 'error',
+              message: `${err}`,
+            }}
+          />
+        );
+      },
+    });
+  };
+
   const handleSumbit = async () => {
+    setLoader(true);
     validate({
       email: {email: true, required: true},
       password: {required: true},
@@ -74,10 +92,28 @@ export default function Login() {
       let formData = {
         email: user.email,
       };
-      try {
-        await AsyncStorage.setItem('user', JSON.stringify(formData));
-        navigation.navigate('Welcome');
-      } catch (error) {}
+      // try {
+      //   await AsyncStorage.setItem('user', JSON.stringify(formData));
+      //   navigation.navigate('Welcome');
+      // } catch (error) {}
+
+      auth()
+        .signInWithEmailAndPassword(user.email, user.password)
+        .then(res => {
+          AsyncStorage.setItem('user', JSON.stringify(formData))
+            .then(res => navigation.navigate('Welcome'))
+            .catch(() => renderError('Something Went wrong'));
+        })
+        .catch(error => {
+          if (error.code == 'auth/wrong-password') {
+            renderError('Incorrect password');
+          } else if (error.code == 'auth/user-not-found') {
+            renderError('User Does not Exist');
+          } else {
+            renderError('Something Went wrong');
+          }
+        })
+        .finally(() => setLoader(false));
     }
   };
 
@@ -221,7 +257,10 @@ export default function Login() {
               {errorMessage}
             </Text>
           ))}
-        <TouchableHighlight style={ss.highLight} onPress={handleSumbit}>
+        <TouchableHighlight
+          disabled={Loader}
+          style={ss.highLight}
+          onPress={handleSumbit}>
           <View style={ss.btn}>
             <Text
               style={[
