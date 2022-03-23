@@ -6,6 +6,8 @@ import SignUpScreen from '../screens/SignUpScreen';
 import TabNavigation from './TabNavigation';
 import LoginScreen from '../screens/LoginScreen';
 import auth from '@react-native-firebase/auth';
+import TopBarNavigation from './TopBarNavigation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function RootNavigation() {
   const Stack = createNativeStackNavigator();
@@ -17,8 +19,18 @@ export default function RootNavigation() {
       primary: '#ddd3ed',
     },
   };
-  function onAuthStateChanged(user) {
+  async function onAuthStateChanged(user) {
     setUser(user);
+    if (user) {
+      let formData = {
+        email: user.email,
+      };
+      try {
+        await AsyncStorage.setItem('user', JSON.stringify(formData));
+      } catch (error) {
+        console.log(error);
+      }
+    }
     if (initializing) setInitializing(false);
   }
   const theme = extendTheme({colors: newColorTheme});

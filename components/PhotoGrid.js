@@ -17,13 +17,8 @@ const PhotoGrid = ({source}) => {
 export default PhotoGrid;
 
 const ss = StyleSheet.create({
-  ImageContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
   image: {
-    width: 200,
-    height: 200,
+    width: 120,
+    height: 120,
   },
 });

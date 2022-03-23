@@ -1,13 +1,12 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import UsersScreen from '../screens/UsersScreen';
-
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeStack from './HomeStack';
 import PolicyStack from './PolicyStack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import EnTypoIcons from 'react-native-vector-icons/Entypo';
-import AddPostScreen from '../screens/AddPostScreen';
+// import AddPostScreen from '../screens/AddPostScreen';
+import ProfileStack from './ProfileStack';
 const TabNavigation = () => {
   const Tab = createBottomTabNavigator();
   return (
@@ -53,13 +52,13 @@ const TabNavigation = () => {
       <Tab.Screen
         name="profile"
         options={{headerShown: false}}
-        component={UsersScreen}
+        component={ProfileStack}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Post"
         options={{headerShown: false}}
         component={AddPostScreen}
-      />
+      /> */}
       <Tab.Screen
         name="Policy"
         options={{headerShown: false}}

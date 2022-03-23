@@ -117,12 +117,13 @@ export default function SignUp() {
       auth()
         .createUserWithEmailAndPassword(user.email, user.password)
         .then(res => {
-          console.log('User account created & signed in!', {resObj: res});
+          setLoader(false);
           AsyncStorage.setItem('user', JSON.stringify(formData))
             .then(res => navigation.navigate('Welcome'))
             .catch(() => renderError('Something Went wrong'));
         })
         .catch(error => {
+          setLoader(false);
           if (error.code == 'auth/email-already-in-use') {
             renderError('Email Already Exist');
           } else if (error.code == 'auth/invalid-email') {
@@ -130,8 +131,7 @@ export default function SignUp() {
           } else {
             renderError('Something Went wrong');
           }
-        })
-        .finally(() => setLoader(false));
+        });
     } else {
       setLoader(false);
     }

@@ -83,12 +83,12 @@ export default function Login() {
   };
 
   const handleSumbit = async () => {
-    setLoader(true);
     validate({
       email: {email: true, required: true},
       password: {required: true},
     });
     if (isFormValid()) {
+      setLoader(true);
       let formData = {
         email: user.email,
       };

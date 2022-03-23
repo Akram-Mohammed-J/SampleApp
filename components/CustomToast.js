@@ -1,10 +1,10 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, Platform} from 'react-native';
 import React from 'react';
 
 const CustomToast = ({toast}) => {
   return (
     <View style={toast.type === 'error' ? ss.error : ss.success}>
-      <Text style={ss.message}>{toast.message}</Text>
+      <Text style={[ss.message]}>{toast.message}</Text>
     </View>
   );
 };
@@ -32,6 +32,7 @@ const ss = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     textAlignVertical: 'center',
+    lineHeight: Platform.OS === 'ios' ? 30 : 20,
     height: '100%',
   },
 });
