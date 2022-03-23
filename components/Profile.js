@@ -83,7 +83,7 @@ const Profile = props => {
         </View>
       </View>
       <View style={ss.infoContainer}>
-        <Text style={ss.user}>Akram Mohammed</Text>
+        <Text style={ss.user}>{user.email.split('@')[0]}</Text>
         <Text style={ss.bio}>
           On the other hand, we denounce with righteous indignation and dislike
           men
