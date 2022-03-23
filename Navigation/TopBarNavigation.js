@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, StatusBar, NativeModules} from 'react-native';
+import {StyleSheet, NativeModules} from 'react-native';
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import FollowersScreen from '../screens/FollowersScreen';

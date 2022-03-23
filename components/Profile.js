@@ -56,20 +56,30 @@ const Profile = props => {
           }}
         />
         <View style={ss.overview}>
-          <TouchableHighlight onPress={() => navigation.navigate('contacts')}>
+          <View style={ss.blockView}>
+            <Text style={ss.boldText}>1,456</Text>
+            <Text style={ss.smText}>Posts</Text>
+          </View>
+          <TouchableHighlight
+            style={ss.touch}
+            onPress={() => navigation.navigate('contacts')}>
             <View style={ss.block}>
-              <Text style={ss.boldText}>1,456</Text>
-              <Text style={ss.smText}>Posts</Text>
+              <Text style={ss.boldText}>167</Text>
+              <Text style={ss.smText}>Followers</Text>
             </View>
           </TouchableHighlight>
-          <View style={ss.block}>
-            <Text style={ss.boldText}>167</Text>
-            <Text style={ss.smText}>Followers</Text>
-          </View>
-          <View style={ss.block}>
-            <Text style={ss.boldText}>80</Text>
-            <Text style={ss.smText}>Following</Text>
-          </View>
+          <TouchableHighlight
+            style={ss.touch}
+            onPress={() =>
+              navigation.navigate('contacts', {
+                screen: 'following',
+              })
+            }>
+            <View style={ss.block}>
+              <Text style={ss.boldText}>80</Text>
+              <Text style={ss.smText}>Following</Text>
+            </View>
+          </TouchableHighlight>
         </View>
       </View>
       <View style={ss.infoContainer}>
@@ -108,12 +118,19 @@ const ss = StyleSheet.create({
     flexDirection: 'row',
   },
   block: {
+    backgroundColor: 'white',
+  },
+  blockView: {
     marginHorizontal: 10,
   },
   boldText: {
     fontWeight: 'bold',
     fontSize: 17,
     color: 'black',
+  },
+  touch: {
+    borderRadius: 20,
+    marginHorizontal: 10,
   },
   smTextx: {
     fontSize: 1,
